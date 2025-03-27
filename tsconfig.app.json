@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "isolatedModules": true,
+        "strict": true,
+        "composite": true,
+        "baseUrl": ".",
+        "lib": ["dom", "es2022"],
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    }
+}
