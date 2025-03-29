@@ -1,10 +1,10 @@
 # these are for development only. refer to readme for installation instructions
 
-# use this after adding new packages to pyproject.toml
+# use this after adding or updating packages in package.json
 lock:
 	npm install
 
-# install all project and dev dependencies in a development venv
+# install from package-lock.json
 install:
 	npm ci
 
@@ -18,4 +18,4 @@ format: lint
 	npm run format
 
 
-.PHONY: install format lock run lint format
+.PHONY: install format lock run lint

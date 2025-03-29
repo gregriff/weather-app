@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import NavBar from '@/views/layout/NavBar.vue';
-import Settings from './Settings.vue';
+import SettingsView from '@/views/pages/settings/SettingsView.vue';
 </script>
 
 <template>
-    <div class="container-fluid">
-        <div class="row justify-content-end">
-            <div class="col-4"><NavBar /></div>
-            <div class="col-4">
-                <div class="float-end"><Settings /></div>
+    <div class="container-fluid mb-4">
+        <div class="row justify-content-between mt-2">
+            <div class="col"></div>
+            <div class="col">
+                <div class="col d-flex justify-content-center"><NavBar /></div>
+            </div>
+            <div class="col text-end">
+                <SettingsView />
             </div>
         </div>
     </div>

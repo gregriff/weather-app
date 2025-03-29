@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Offcanvas } from 'bootstrap';
 import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
+import ExploreSettings from './ExploreSettings.vue';
+import ForecastSettings from './ForecastSettings.vue';
 
-const settingsMenu = useTemplateRef<HTMLDivElement>('settingsMenu');
+const offcanvasElement = useTemplateRef<HTMLDivElement | null>('settingsMenu');
 const offcanvasInstance = ref<Offcanvas | null>(null);
 
 onMounted(() => {
-    offcanvasInstance.value = new Offcanvas(settingsMenu.value!);
+    offcanvasInstance.value = new Offcanvas(offcanvasElement.value!);
 });
 
 onUnmounted(() => offcanvasInstance.value?.dispose());
@@ -16,7 +18,7 @@ onUnmounted(() => offcanvasInstance.value?.dispose());
     <button
         class="btn btn-secondary"
         type="button"
-        @click="offcanvasInstance!.show"
+        @click="offcanvasInstance?.show"
     >
         Settings
     </button>
@@ -31,13 +33,13 @@ onUnmounted(() => offcanvasInstance.value?.dispose());
             <button
                 type="button"
                 class="btn-close"
-                data-bs-dismiss="offcanvas"
-                @click="offcanvasInstance!.hide"
+                @click="offcanvasInstance?.hide"
             ></button>
         </div>
         <div class="offcanvas-body">
-            <div class="container">
-                <div class="row"></div>
+            <div class="container p-0">
+                <ExploreSettings />
+                <ForecastSettings />
             </div>
         </div>
     </div>

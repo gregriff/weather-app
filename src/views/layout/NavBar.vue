@@ -3,13 +3,10 @@ import { useRoute } from 'vue-router';
 import routes from '@/router/routes';
 
 const currentRoute = useRoute();
-
-function upperCaseFirstLetter(str: string) {
-    return str[0].toUpperCase() + str.substring(1);
-}
 </script>
+
 <template>
-    <ul class="nav nav-underline">
+    <ul class="nav nav-underline sticky-top">
         <li
             v-for="(route, idx) in routes"
             :key="idx"
@@ -18,7 +15,7 @@ function upperCaseFirstLetter(str: string) {
             <router-link
                 :to="route.path"
                 :class="['nav-link', { active: currentRoute.name === route.name }]"
-                >{{ upperCaseFirstLetter(route.name) }}</router-link
+                >{{ route.meta.navName! }}</router-link
             >
         </li>
     </ul>
