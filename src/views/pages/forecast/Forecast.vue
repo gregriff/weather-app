@@ -1,30 +1,61 @@
 <script setup lang="ts">
-import { requestUserLocation } from '@/services/locationService';
-import { ref } from 'vue';
+import { onBeforeMount } from 'vue';
+import { useForecastStore } from '@/stores/forecastStore/forecastStore.ts';
 
-const lat = ref<number | null>(null);
-const long = ref<number | null>(null);
+const forecastStore = useForecastStore();
 
-async function getUserLocation() {
-    const { latitude, longitude } = await requestUserLocation();
-    lat.value = latitude;
-    long.value = longitude;
-}
+onBeforeMount(() => forecastStore.getMainForecast());
 </script>
 
 <template>
     <div class="row justify-content-center">
         <div class="col-auto">
             <button
-                @click="getUserLocation"
+                v-if="forecastStore.locationFetchFailed"
+                @click="forecastStore.getMainForecast()"
                 class="btn btn-primary"
             >
-                Use Current Location
+                Allow Location Access
             </button>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <p>{{ `${lat ?? ''} ${long ?? ''}` }}</p>
+            <div
+                v-else-if="forecastStore.mainForecast.loading"
+                class="spinner-grow"
+                role="status"
+            >
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <button
+                v-else-if="!forecastStore.mainForecast.properties"
+                @click="forecastStore.getMainForecast()"
+                class="btn btn-danger"
+            >
+                Retry
+            </button>
+            <div
+                v-else
+                class="container"
+            >
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    {{ forecastStore.mainForecast.properties.city }}:
+                                    {{ forecastStore.mainForecastCurrentData.temperature }}&deg;
+                                    <small>{{
+                                        forecastStore.mainForecastCurrentData.temperatureUnit
+                                    }}</small>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">
+                                    {{ forecastStore.mainForecastCurrentData.shortForecast }}
+                                </h6>
+                                <p class="card-text">
+                                    {{ forecastStore.mainForecastCurrentData.detailedForecast }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
