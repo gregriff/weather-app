@@ -1,0 +1,48 @@
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
+import type { Forecast } from '@/stores/forecastStore/types.ts';
+import { useUserStore } from '@/stores/userStore/userStore.ts';
+import { getForecastFromLocation } from '@/services/forecastService.ts';
+
+export const useForecastStore = defineStore('forecastStore', () => {
+    const mainForecast = ref<Forecast>({ loading: true });
+    const savedForecasts = ref<Forecast[]>([]);
+
+    const locationFetchFailed = ref<boolean>(false);
+
+    // TODO: until refactor, only call this when the data is present
+    const mainForecastCurrentData = computed(() => mainForecast.value.properties!.periods[0]);
+
+    // actions
+    async function getMainForecast() {
+        const userStore = useUserStore();
+        if (!userStore.currentLocation) {
+            try {
+                await userStore.getCurrentLocation();
+                locationFetchFailed.value = false;
+            } catch {
+                locationFetchFailed.value = true;
+                mainForecast.value.loading = false;
+                return;
+            }
+        }
+
+        const forecastResponse = await getForecastFromLocation(userStore.currentLocation!);
+        mainForecast.value.properties = forecastResponse.data.properties;
+        mainForecast.value.loading = false;
+    }
+
+    function $reset() {
+        mainForecast.value = { loading: true };
+        savedForecasts.value = [];
+    }
+
+    return {
+        mainForecast,
+        savedForecasts,
+        locationFetchFailed,
+        mainForecastCurrentData,
+        getMainForecast,
+        $reset,
+    };
+});

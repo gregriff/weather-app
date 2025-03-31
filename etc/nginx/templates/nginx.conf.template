@@ -1,4 +1,5 @@
 env NGINX_SERVER_NAME;  # hostname with no protocol.
+env PORT;
 
 worker_processes 1;
 error_log /dev/stderr info;
@@ -26,7 +27,7 @@ http {
     gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript;
 
     server {
-        listen 5345;
+        listen ${PORT};
         charset utf-8;
 
         # Max upload size (only csv at the moment)
