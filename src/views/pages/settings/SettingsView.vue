@@ -18,7 +18,7 @@ onUnmounted(() => offcanvasInstance.value?.dispose());
     <button
         class="btn btn-secondary"
         type="button"
-        @click="offcanvasInstance?.show"
+        @click="() => offcanvasInstance?.show"
     >
         Settings
     </button>

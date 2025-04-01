@@ -6,6 +6,7 @@ import { getForecastFromLocation } from '@/services/forecastService.ts';
 
 export const useForecastStore = defineStore('forecastStore', () => {
     const mainForecast = ref<Forecast>({ loading: true });
+    const mainForecastLoaded = ref<boolean>(false);
     const savedForecasts = ref<Forecast[]>([]);
 
     const locationFetchFailed = ref<boolean>(false);
@@ -27,18 +28,28 @@ export const useForecastStore = defineStore('forecastStore', () => {
             }
         }
 
-        const forecastResponse = await getForecastFromLocation(userStore.currentLocation!);
-        mainForecast.value.properties = forecastResponse.data.properties;
-        mainForecast.value.loading = false;
+        try {
+            const forecastResponse = await getForecastFromLocation(userStore.currentLocation!);
+            mainForecast.value.properties = forecastResponse.data.properties;
+            mainForecastLoaded.value = true;
+        } catch {
+            // TODO: handle API error
+            mainForecastLoaded.value = false;
+        } finally {
+            mainForecast.value.loading = false;
+        }
     }
 
     function $reset() {
         mainForecast.value = { loading: true };
+        mainForecastLoaded.value = false;
         savedForecasts.value = [];
+        locationFetchFailed.value = false;
     }
 
     return {
         mainForecast,
+        mainForecastLoaded,
         savedForecasts,
         locationFetchFailed,
         mainForecastCurrentData,

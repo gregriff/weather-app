@@ -1,56 +1,74 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
-import { useForecastStore } from '@/stores/forecastStore/forecastStore.ts';
+import type { ForecastData } from '@/stores/forecastStore/types.ts';
+import { computed } from 'vue';
 
-const forecastStore = useForecastStore();
+// so we don't always need to check for undefined
+// requires our logic that determines whether the data is loaded is perfect!
+const { forecast } = defineProps<{ forecast: ForecastData }>();
 
-onBeforeMount(() => forecastStore.getMainForecast());
+const currentData = computed(() => forecast.periods[0]);
+const sixDayPeriods = computed(() =>
+    forecast.periods.filter((data) => data.isDaytime).slice(0, -1),
+);
 </script>
 
 <template>
-    <div class="row justify-content-center">
-        <div class="col-auto">
-            <button
-                v-if="forecastStore.locationFetchFailed"
-                @click="forecastStore.getMainForecast()"
-                class="btn btn-primary"
-            >
-                Allow Location Access
-            </button>
-            <div
-                v-else-if="forecastStore.mainForecast.loading"
-                class="spinner-grow"
-                role="status"
-            >
-                <span class="visually-hidden">Loading...</span>
+    <div class="row justify-content-center mb-3">
+        <div class="col-9">
+            <div class="card main-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-start align-items-center gap-4">
+                        <h1 class="display-4 card-title">
+                            {{ forecast.city }}
+                        </h1>
+                        <h1 class="display-6 text-body-secondary">
+                            {{ currentData.temperature }}&deg;
+                            <small>{{ currentData.temperatureUnit }}</small>
+                        </h1>
+                    </div>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">
+                        {{ currentData.shortForecast }}
+                    </h6>
+                    <p class="card-text">
+                        {{ currentData.detailedForecast }}
+                    </p>
+                </div>
             </div>
-            <button
-                v-else-if="!forecastStore.mainForecast.properties"
-                @click="forecastStore.getMainForecast()"
-                class="btn btn-danger"
-            >
-                Retry
-            </button>
-            <div
-                v-else
-                class="container"
-            >
-                <div class="row justify-content-center">
-                    <div class="col-4">
-                        <div class="card">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <h4 class="text-center mb-4">Daily</h4>
+        <div class="col-9">
+            <div class="container">
+                <div class="row justify-content-evenly">
+                    <div
+                        v-for="(period, idx) in sixDayPeriods"
+                        :key="idx"
+                        class="col-4 mb-3"
+                    >
+                        <div class="card text-center">
+                            <img
+                                src="..."
+                                class="card-img-top"
+                                alt="..."
+                            />
                             <div class="card-body">
-                                <h5 class="card-title">
-                                    {{ forecastStore.mainForecast.properties.city }}:
-                                    {{ forecastStore.mainForecastCurrentData.temperature }}&deg;
-                                    <small>{{
-                                        forecastStore.mainForecastCurrentData.temperatureUnit
-                                    }}</small>
-                                </h5>
+                                <h5 class="card-title">{{ period.name }}</h5>
                                 <h6 class="card-subtitle mb-2 text-body-secondary">
-                                    {{ forecastStore.mainForecastCurrentData.shortForecast }}
+                                    {{ period.temperature }}&deg;
+                                </h6>
+                                <h6
+                                    v-if="period.probabilityOfPrecipitation.value"
+                                    class="card-subtitle"
+                                >
+                                    <span class="badge rounded-pill text-bg-info mb-1"
+                                        >{icon} {{ period.probabilityOfPrecipitation.value }}%
+                                    </span>
                                 </h6>
                                 <p class="card-text">
-                                    {{ forecastStore.mainForecastCurrentData.detailedForecast }}
+                                    {{ period.detailedForecast }}
                                 </p>
                             </div>
                         </div>
@@ -60,3 +78,9 @@ onBeforeMount(() => forecastStore.getMainForecast());
         </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.main-card {
+    border-color: transparent;
+}
+</style>
