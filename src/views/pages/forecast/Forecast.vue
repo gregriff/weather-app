@@ -50,7 +50,7 @@ const sixDayPeriods = computed(() =>
                     >
                         <div class="card text-center">
                             <img
-                                src="..."
+                                src=""
                                 class="card-img-top"
                                 alt="..."
                             />

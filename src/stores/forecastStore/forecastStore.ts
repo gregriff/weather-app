@@ -11,9 +11,6 @@ export const useForecastStore = defineStore('forecastStore', () => {
 
     const locationFetchFailed = ref<boolean>(false);
 
-    // TODO: until refactor, only call this when the data is present
-    const mainForecastCurrentData = computed(() => mainForecast.value.properties!.periods[0]);
-
     // actions
     async function getMainForecast() {
         const userStore = useUserStore();
@@ -52,7 +49,6 @@ export const useForecastStore = defineStore('forecastStore', () => {
         mainForecastLoaded,
         savedForecasts,
         locationFetchFailed,
-        mainForecastCurrentData,
         getMainForecast,
         $reset,
     };
