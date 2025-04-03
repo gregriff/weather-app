@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         name: 'forecast',
         component: MainForecastView,
         meta: {
-            navName: 'My Forecast',
+            navName: 'Forecast',
         },
     },
     {

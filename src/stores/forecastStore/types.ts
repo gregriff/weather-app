@@ -1,6 +1,8 @@
-// models response objects from the API
+// models forecast objects stored in Pinia
 export interface PrecipitationObject {
     unitCode: string;
+    minValue: number;
+    maxValue: number;
     value: number | string | null;
 }
 
@@ -28,18 +30,6 @@ export interface ForecastData {
     periods: ForecastPeriod[];
 }
 
-export interface Forecast {
-    properties?: ForecastData;
-    loading?: boolean;
-}
-
-export interface HourlyForecastPrecipitationObject {
-    unitCode: string;
-    minValue: number;
-    maxValue: number;
-    value: number | string | null;
-}
-
 export interface HourlyForecastPeriod {
     number: number;
     name: string;
@@ -49,21 +39,22 @@ export interface HourlyForecastPeriod {
     temperature: number;
     temperatureUnit: string;
     temperatureTrend: string;
-    probabilityOfPrecipitation: HourlyForecastPrecipitationObject;
+    probabilityOfPrecipitation: PrecipitationObject;
     windDirection: string;
     shortForecast: string;
     detailedForecast: string;
 }
 
 export interface HourlyForecastData {
-    city: string;
-    state: string;
     generatedAt: string;
     updatedTime: string;
     periods: HourlyForecastPeriod[];
 }
 
-export interface HourlyForecast {
-    properties?: HourlyForecastData;
+export interface Forecast {
+    data?: ForecastData;
+    hourlyData?: HourlyForecastData;
+
     loading?: boolean;
+    hourlyLoading?: boolean;
 }

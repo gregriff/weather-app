@@ -12,7 +12,7 @@ onBeforeMount(() => forecastStore.getMainForecast());
 <template>
     <MainLayout>
         <div
-            v-if="!forecastStore.mainForecastLoaded"
+            v-if="!forecastStore.mainForecast.data"
             class="row justify-content-center"
         >
             <div class="col-auto">
@@ -42,7 +42,8 @@ onBeforeMount(() => forecastStore.getMainForecast());
 
         <ForecastComponent
             v-else
-            :forecast="forecastStore.mainForecast.properties!"
+            :forecast="forecastStore.mainForecast.data"
+            :hourly-forecast="forecastStore.mainForecast.hourlyData"
         />
     </MainLayout>
 </template>

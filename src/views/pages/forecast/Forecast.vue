@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import type { ForecastData } from '@/stores/forecastStore/types.ts';
+import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
+import { convertISO8601ToHHMM } from '@/utils/time.ts';
 
-// so we don't always need to check for undefined
-// requires our logic that determines whether the data is loaded is perfect!
-const { forecast } = defineProps<{ forecast: ForecastData }>();
+/*
+    so we don't always need to check for undefined requires our logic that determines
+    whether the data is loaded (`MainForecastView.vue`) is perfect!
+ */
+const { forecast, hourlyForecast } = defineProps<{
+    forecast: ForecastData;
+    hourlyForecast?: HourlyForecastData;
+}>();
 
 const currentData = computed(() => forecast.periods[0]);
+
+// There are always 7 daytime periods. For better html layout, reduce to 6
 const sixDayPeriods = computed(() =>
     forecast.periods.filter((data) => data.isDaytime).slice(0, -1),
 );
+
+const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
 </script>
 
 <template>
@@ -33,12 +43,41 @@ const sixDayPeriods = computed(() =>
                         {{ currentData.detailedForecast }}
                     </p>
                 </div>
+                <div v-if="hourlyForecast">
+                    <hr />
+                    <div class="row justify-content-evenly mt-2">
+                        <div
+                            v-for="(period, idx) in nextSixHours"
+                            :key="idx"
+                            class="col-6 col-sm-2 my-2"
+                        >
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-2">
+                                        {{ convertISO8601ToHHMM(period.startTime) }}
+                                    </h5>
+                                    <h6
+                                        v-if="period.probabilityOfPrecipitation.value"
+                                        class="card-subtitle"
+                                    >
+                                        <span class="badge rounded-pill text-bg-info mb-1"
+                                            >{icon} {{ period.probabilityOfPrecipitation.value }}%
+                                        </span>
+                                    </h6>
+                                    <p class="card-text text-body-secondary mt-4">
+                                        {{ period.shortForecast }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <hr />
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-3">
         <h4 class="text-center mb-4">Daily</h4>
         <div class="col-9">
             <div class="container">
@@ -46,7 +85,7 @@ const sixDayPeriods = computed(() =>
                     <div
                         v-for="(period, idx) in sixDayPeriods"
                         :key="idx"
-                        class="col-4 mb-3"
+                        class="col-12 col-sm-4 mb-3"
                     >
                         <div class="card text-center">
                             <img
@@ -68,7 +107,7 @@ const sixDayPeriods = computed(() =>
                                     </span>
                                 </h6>
                                 <p class="card-text">
-                                    {{ period.detailedForecast }}
+                                    {{ period.shortForecast }}
                                 </p>
                             </div>
                         </div>
