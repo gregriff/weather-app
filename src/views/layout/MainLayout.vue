@@ -16,5 +16,5 @@ import SettingsView from '@/views/pages/settings/SettingsView.vue';
         </div>
     </div>
 
-    <div class="container py-4 mx-auto"><slot /></div>
+    <div class="container"><slot /></div>
 </template>

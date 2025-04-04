@@ -18,8 +18,8 @@ export async function requestUserLocation(): Promise<CurrentLocation> {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 resolve({
-                    latitude: parseFloat(position.coords.latitude.toFixed(3)),
-                    longitude: parseFloat(position.coords.longitude.toFixed(3)),
+                    latitude: parseFloat(position.coords.latitude.toFixed(4)),
+                    longitude: parseFloat(position.coords.longitude.toFixed(4)),
                 });
             },
             (error) => {

@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router';
-import ForecastView from '@/views/pages/forecast/ForecastView.vue';
+import MainForecastView from '@/views/pages/forecast/MainForecastView.vue';
 import ExploreView from '@/views/pages/explore/ExploreView.vue';
 import SavedLocationsView from '@/views/pages/saved/SavedLocationsView.vue';
 
@@ -15,9 +15,9 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/',
         name: 'forecast',
-        component: ForecastView,
+        component: MainForecastView,
         meta: {
-            navName: 'My Forecast',
+            navName: 'Forecast',
         },
     },
     {

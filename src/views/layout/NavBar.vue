@@ -15,7 +15,7 @@ const currentRoute = useRoute();
             <router-link
                 :to="route.path"
                 :class="['nav-link', { active: currentRoute.name === route.name }]"
-                >{{ route.meta.navName! }}</router-link
+                >{{ route.meta?.navName! }}</router-link
             >
         </li>
     </ul>
