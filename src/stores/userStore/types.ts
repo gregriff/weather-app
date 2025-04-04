@@ -14,6 +14,14 @@ export interface CurrentLocation {
     longitude: number;
 }
 
+export interface Gridpoints {
+    office: string;
+    x: number;
+    y: number;
+    city: string;
+    state: string;
+}
+
 export interface Settings {
     favoriteCityId?: string;
     lastKnownGridpointX?: number;

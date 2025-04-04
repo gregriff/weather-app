@@ -6,7 +6,10 @@ import { onBeforeMount } from 'vue';
 
 const forecastStore = useForecastStore();
 
-onBeforeMount(() => forecastStore.getMainForecast());
+// TODO: this condition will need to be better in the future
+onBeforeMount(() => {
+    if (!forecastStore.mainForecast.data) forecastStore.getMainForecast();
+});
 </script>
 
 <template>
@@ -44,6 +47,7 @@ onBeforeMount(() => forecastStore.getMainForecast());
             v-else
             :forecast="forecastStore.mainForecast.data"
             :hourly-forecast="forecastStore.mainForecast.hourlyData"
+            :gridpoints="forecastStore.mainForecast.gridpoints!"
         />
     </MainLayout>
 </template>

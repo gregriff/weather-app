@@ -40,8 +40,12 @@ export const useForecastStore = defineStore('forecastStore', () => {
          */
 
         try {
-            const forecastResponse = await getForecastFromLocation(userStore.currentLocation!);
-            mainForecast.value.data = forecastResponse.data.properties;
+            const { data } = await getForecastFromLocation(
+                userStore.currentLocation!,
+                userStore.currentGridpoints,
+            );
+            mainForecast.value.data = data.properties;
+            mainForecast.value.gridpoints = userStore.currentGridpoints = data.gridpoints;
         } catch {
             // TODO: handle API error
             console.error('Error fetching forcast from location');
@@ -52,6 +56,7 @@ export const useForecastStore = defineStore('forecastStore', () => {
         try {
             const hourlyForecastResponse = await getHourlyForecastFromLocation(
                 userStore.currentLocation!,
+                userStore.currentGridpoints,
             );
             mainForecast.value.hourlyData = hourlyForecastResponse.data.properties;
         } catch {

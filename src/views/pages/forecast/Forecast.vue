@@ -2,14 +2,12 @@
 import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
 import { convertISO8601ToHHMM } from '@/utils/time.ts';
+import type { Gridpoints } from '@/stores/userStore/types.ts';
 
-/*
-    so we don't always need to check for undefined requires our logic that determines
-    whether the data is loaded (`MainForecastView.vue`) is perfect!
- */
-const { forecast, hourlyForecast } = defineProps<{
+const { forecast, hourlyForecast, gridpoints } = defineProps<{
     forecast: ForecastData;
     hourlyForecast?: HourlyForecastData;
+    gridpoints: Gridpoints;
 }>();
 
 const currentData = computed(() => forecast.periods[0]);
@@ -29,7 +27,7 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
                 <div class="card-body">
                     <div class="d-flex justify-content-start align-items-center gap-4">
                         <h1 class="display-4 card-title">
-                            {{ forecast.city }}
+                            {{ gridpoints.city }}
                         </h1>
                         <h1 class="display-6 text-body-secondary">
                             {{ currentData.temperature }}&deg;

@@ -1,4 +1,6 @@
 // models forecast objects stored in Pinia
+import type { Gridpoints } from '@/stores/userStore/types.ts';
+
 export interface PrecipitationObject {
     unitCode: string;
     minValue: number;
@@ -54,6 +56,7 @@ export interface HourlyForecastData {
 export interface Forecast {
     data?: ForecastData;
     hourlyData?: HourlyForecastData;
+    gridpoints?: Gridpoints;
 
     loading?: boolean;
     hourlyLoading?: boolean;
