@@ -96,14 +96,20 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
                                 <h6 class="card-subtitle mb-2 text-body-secondary">
                                     {{ period.temperature }}&deg;
                                 </h6>
-                                <h6
-                                    v-if="period.probabilityOfPrecipitation.value"
-                                    class="card-subtitle"
-                                >
-                                    <span class="badge rounded-pill text-bg-info mb-1"
-                                        >{icon} {{ period.probabilityOfPrecipitation.value }}%
-                                    </span>
-                                </h6>
+                                <div class="row justify-content-center card-subtitle mb-1">
+                                    <div
+                                        v-if="period.probabilityOfPrecipitation.value"
+                                        class="col-auto"
+                                    >
+                                        <span class="badge rounded-pill text-bg-info"
+                                            ><svg class="daily-forecast-badge-icon">
+                                                <use href="/sprite.svg#rain" />
+                                            </svg>
+                                            {{ period.probabilityOfPrecipitation.value }}%
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <p class="card-text">
                                     {{ period.shortForecast }}
                                 </p>
