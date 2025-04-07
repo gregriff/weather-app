@@ -22,6 +22,7 @@ export interface ForecastPeriod {
     windDirection: string;
     shortForecast: string;
     detailedForecast: string;
+    iconName: string;
 }
 
 export interface ForecastData {
@@ -45,6 +46,7 @@ export interface HourlyForecastPeriod {
     windDirection: string;
     shortForecast: string;
     detailedForecast: string;
+    iconName: string;
 }
 
 export interface HourlyForecastData {

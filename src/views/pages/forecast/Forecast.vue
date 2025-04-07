@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
-import { convertISO8601ToHHMM } from '@/utils/time.ts';
 import type { Gridpoints } from '@/stores/userStore/types.ts';
+import DailyPeriodComponent from '@/views/pages/forecast/components/DailyPeriodComponent.vue';
+import HourlyPeriodComponent from '@/views/pages/forecast/components/HourlyPeriodComponent.vue';
 
 const { forecast, hourlyForecast, gridpoints } = defineProps<{
     forecast: ForecastData;
@@ -24,8 +25,8 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
     <div class="row justify-content-center mb-3">
         <div class="col-9">
             <div class="card main-card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-start align-items-center gap-4">
+                <div class="card-body py-1">
+                    <div class="d-flex justify-content-start align-items-center gap-4 my-1">
                         <h1 class="display-4 card-title">
                             {{ gridpoints.city }}
                         </h1>
@@ -45,28 +46,11 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
                     <hr />
                     <div class="row justify-content-evenly mt-2">
                         <div
-                            v-for="(period, idx) in nextSixHours"
+                            v-for="(hour, idx) in nextSixHours"
                             :key="idx"
                             class="col-6 col-sm-2 my-2"
                         >
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-2">
-                                        {{ convertISO8601ToHHMM(period.startTime) }}
-                                    </h5>
-                                    <h6
-                                        v-if="period.probabilityOfPrecipitation.value"
-                                        class="card-subtitle"
-                                    >
-                                        <span class="badge rounded-pill text-bg-info mb-1"
-                                            >{icon} {{ period.probabilityOfPrecipitation.value }}%
-                                        </span>
-                                    </h6>
-                                    <p class="card-text text-body-secondary mt-4">
-                                        {{ period.shortForecast }}
-                                    </p>
-                                </div>
-                            </div>
+                            <HourlyPeriodComponent :period="hour" />
                         </div>
                     </div>
                 </div>
@@ -81,40 +65,11 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
             <div class="container">
                 <div class="row justify-content-evenly">
                     <div
-                        v-for="(period, idx) in sixDayPeriods"
+                        v-for="(day, idx) in sixDayPeriods"
                         :key="idx"
                         class="col-12 col-sm-4 mb-3"
                     >
-                        <div class="card text-center">
-                            <img
-                                src=""
-                                class="card-img-top"
-                                alt="..."
-                            />
-                            <div class="card-body">
-                                <h5 class="card-title">{{ period.name }}</h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">
-                                    {{ period.temperature }}&deg;
-                                </h6>
-                                <div class="row justify-content-center card-subtitle mb-1">
-                                    <div
-                                        v-if="period.probabilityOfPrecipitation.value"
-                                        class="col-auto"
-                                    >
-                                        <span class="badge rounded-pill text-bg-info"
-                                            ><svg class="daily-forecast-badge-icon">
-                                                <use href="/sprite.svg#rain" />
-                                            </svg>
-                                            {{ period.probabilityOfPrecipitation.value }}%
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <p class="card-text">
-                                    {{ period.shortForecast }}
-                                </p>
-                            </div>
-                        </div>
+                        <DailyPeriodComponent :period="day" />
                     </div>
                 </div>
             </div>

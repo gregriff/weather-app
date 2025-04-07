@@ -8,7 +8,7 @@ const offcanvasElement = useTemplateRef<HTMLDivElement | null>('settingsMenu');
 const offcanvasInstance = ref<Offcanvas | null>(null);
 
 onMounted(() => {
-    offcanvasInstance.value = new Offcanvas(offcanvasElement.value!);
+    offcanvasInstance.value = Offcanvas.getOrCreateInstance(offcanvasElement.value!);
 });
 
 onUnmounted(() => offcanvasInstance.value?.dispose());
@@ -16,11 +16,11 @@ onUnmounted(() => offcanvasInstance.value?.dispose());
 
 <template>
     <button
-        class="btn btn-secondary"
+        class="btn me-2"
         type="button"
         @click="() => offcanvasInstance?.show()"
     >
-        Settings
+        <svg class="settings-icon"><use href="/sprite.svg#settings" /></svg>
     </button>
 
     <div
