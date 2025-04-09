@@ -6,7 +6,9 @@ import { defineConfig } from 'vite';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [Vue()],
-    build: {},
+    build: {
+        assetsInlineLimit: 0, // Prevents inlining of assets
+    },
     css: {
         preprocessorOptions: {
             scss: {
