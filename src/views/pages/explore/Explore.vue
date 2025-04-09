@@ -81,7 +81,9 @@ watch(searchText, (newSearchText, oldSearchText) => {
 
 // todo: ensure this value is empty when user navigates to page so that they aren't penalized for searching for a new city
 onMounted(() =>
-    console.log(`Mounted, totalchars typed is: ${totalCharsTyped}, apiCalls: ${numAPICalls.value}`),
+    console.log(
+        `Mounted, totalchars typed is: ${totalCharsTyped}, apiCalls: ${numAPICalls.value}`,
+    ),
 );
 
 // todo: store this in session storage to avoid API abuse
@@ -103,7 +105,9 @@ onUnmounted(() => console.log('Total chars typed:', totalCharsTyped));
                 class="form-control text-center"
                 list="citySearchOptions"
                 :disabled="apiCallsDisabled"
-                :placeholder="apiCallsDisabled ? 'Temporarily Disabled' : searchBoxPlaceholder"
+                :placeholder="
+                    apiCallsDisabled ? 'Temporarily Disabled' : searchBoxPlaceholder
+                "
             />
             <datalist id="citySearchOptions">
                 <option

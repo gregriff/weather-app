@@ -8,7 +8,9 @@ const { period } = defineProps<{
     period: ForecastPeriod;
 }>();
 
-const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`);
+const svgHref = computed(
+    () => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`,
+);
 </script>
 
 <template>
@@ -20,13 +22,17 @@ const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, p
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ period.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{ period.temperature }}&deg;</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                {{ period.temperature }}&deg;
+            </h6>
 
             <p class="card-text">
                 {{ period.shortForecast }}
             </p>
             <div class="row justify-content-center card-subtitle">
-                <RainBadge :precipitation-probability="period.probabilityOfPrecipitation.value" />
+                <RainBadge
+                    :precipitation-probability="period.probabilityOfPrecipitation.value"
+                />
             </div>
         </div>
     </div>

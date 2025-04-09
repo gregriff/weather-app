@@ -26,7 +26,9 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
         <div class="col-9">
             <div class="card main-card">
                 <div class="card-body py-1">
-                    <div class="d-flex justify-content-start align-items-center gap-4 my-1">
+                    <div
+                        class="d-flex justify-content-start align-items-center gap-4 my-1"
+                    >
                         <h1 class="display-4 card-title">
                             {{ gridpoints.city }}
                         </h1>

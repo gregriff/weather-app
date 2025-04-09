@@ -9,7 +9,9 @@ const { period } = defineProps<{
     period: HourlyForecastPeriod;
 }>();
 
-const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`);
+const svgHref = computed(
+    () => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`,
+);
 </script>
 
 <template>
@@ -23,7 +25,9 @@ const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, p
             <h5 class="card-title mb-2">
                 {{ convertISO8601ToHHMM(period.startTime) }}
             </h5>
-            <RainBadge :precipitation-probability="period.probabilityOfPrecipitation.value" />
+            <RainBadge
+                :precipitation-probability="period.probabilityOfPrecipitation.value"
+            />
             <p class="card-text text-body-secondary mt-4">
                 {{ period.shortForecast }}
             </p>
