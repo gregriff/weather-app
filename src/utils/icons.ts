@@ -13,8 +13,9 @@ export function getForecastIcon(iconIdentifier: string, isDaytime: boolean): str
         case 'ovc':
             return 'two-clouds';
         case 'rain':
-            return 'rain';
+            return 'drizzle';
         case 'rain_showers':
+            return 'rain';
         case 'rain_showers-hi':
             return 'rain-heavy';
         case 'tsra':
