@@ -9,8 +9,11 @@ export interface Place {
     coordinates: { longitude: number; latitude: number };
 }
 
+export type SearchResults = { [key: string]: Place };
+
+// places are indexed by their ID
 interface ForwardGeocodeResponse {
-    places: Place[];
+    results: SearchResults;
 }
 
 /*
