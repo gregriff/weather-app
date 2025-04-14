@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import MainLayout from '@/views/layout/MainLayout.vue';
-import ForecastComponent from './Forecast.vue';
+import MainLayout from '@/layout/MainLayout.vue';
+import ForecastComponent from './components/Forecast.vue';
 import { useForecastStore } from '@/stores/forecastStore/forecastStore.ts';
 import { onBeforeMount } from 'vue';
 

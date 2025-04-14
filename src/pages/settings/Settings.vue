@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Offcanvas } from 'bootstrap';
 import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
-import ExploreSettings from './ExploreSettings.vue';
-import ForecastSettings from './ForecastSettings.vue';
+import ExploreSettings from './components/ExploreSettings.vue';
+import ForecastSettings from './components/ForecastSettings.vue';
 
 const offcanvasElement = useTemplateRef<HTMLDivElement | null>('settingsMenu');
 const offcanvasInstance = ref<Offcanvas | null>(null);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ForecastPeriod } from '@/stores/forecastStore/types.ts';
-import RainBadge from '@/views/pages/forecast/components/badges/RainBadge.vue';
+import RainBadge from '@/pages/forecast/components/badges/RainBadge.vue';
 import { computed } from 'vue';
 import { getForecastIcon } from '@/utils/icons.ts';
 
@@ -8,7 +8,9 @@ const { period } = defineProps<{
     period: ForecastPeriod;
 }>();
 
-const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`);
+const svgHref = computed(
+    () => `/sprite.svg#${getForecastIcon(period.iconName, period.isDaytime)}`,
+);
 </script>
 
 <template>
@@ -20,14 +22,18 @@ const svgHref = computed(() => `/sprite.svg#${getForecastIcon(period.iconName, p
         </div>
         <div class="card-body">
             <h5 class="card-title">{{ period.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">{{ period.temperature }}&deg;</h6>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+                {{ period.temperature }}&deg;
+            </h6>
+            <div class="row justify-content-center card-subtitle">
+                <RainBadge
+                    :precipitation-probability="period.probabilityOfPrecipitation.value"
+                />
+            </div>
 
-            <p class="card-text">
+            <p class="card-text mt-3">
                 {{ period.shortForecast }}
             </p>
-            <div class="row justify-content-center card-subtitle">
-                <RainBadge :precipitation-probability="period.probabilityOfPrecipitation.value" />
-            </div>
         </div>
     </div>
 </template>

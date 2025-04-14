@@ -13,7 +13,12 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 api: 'modern',
-                silenceDeprecations: ['mixed-decls', 'color-functions', 'global-builtin', 'import'], // ridiculous number of warnings with newest sass. Bootstrap 6 when??
+                silenceDeprecations: [
+                    'mixed-decls',
+                    'color-functions',
+                    'global-builtin',
+                    'import',
+                ], // ridiculous number of warnings with newest sass. Bootstrap 6 when??
             },
         },
     },

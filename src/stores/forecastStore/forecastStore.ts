@@ -45,7 +45,8 @@ export const useForecastStore = defineStore('forecastStore', () => {
                 userStore.currentGridpoints,
             );
             mainForecast.value.data = data.properties;
-            mainForecast.value.gridpoints = userStore.currentGridpoints = data.gridpoints;
+            mainForecast.value.gridpoints = userStore.currentGridpoints =
+                data.gridpoints;
         } catch {
             // TODO: handle API error
             console.error('Error fetching forcast from location');

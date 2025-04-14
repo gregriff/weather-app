@@ -2,8 +2,8 @@
 import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
 import type { Gridpoints } from '@/stores/userStore/types.ts';
-import DailyPeriodComponent from '@/views/pages/forecast/components/DailyPeriodComponent.vue';
-import HourlyPeriodComponent from '@/views/pages/forecast/components/HourlyPeriodComponent.vue';
+import DailyPeriodComponent from '@/pages/forecast/components/DailyPeriod.vue';
+import HourlyPeriodComponent from '@/pages/forecast/components/HourlyPeriod.vue';
 
 const { forecast, hourlyForecast, gridpoints } = defineProps<{
     forecast: ForecastData;
@@ -26,7 +26,9 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
         <div class="col-9">
             <div class="card main-card">
                 <div class="card-body py-1">
-                    <div class="d-flex justify-content-start align-items-center gap-4 my-1">
+                    <div
+                        class="d-flex justify-content-start align-items-center gap-4 my-1"
+                    >
                         <h1 class="display-4 card-title">
                             {{ gridpoints.city }}
                         </h1>

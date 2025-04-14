@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import routes from '@/router/routes';
-import SettingsView from '@/views/pages/settings/SettingsView.vue';
+import SettingsComponent from '@/pages/settings/Settings.vue';
 
 const currentRoute = useRoute();
 </script>
@@ -17,7 +17,7 @@ const currentRoute = useRoute();
                 class="nav-item"
             >
                 <router-link
-                    :to="route.path"
+                    :to="route.meta?.defaultPath ?? route.path"
                     :class="['nav-link', { active: currentRoute.name === route.name }]"
                     >{{ route.meta?.navName! }}</router-link
                 >
@@ -25,7 +25,7 @@ const currentRoute = useRoute();
         </ul>
 
         <div class="col text-end">
-            <SettingsView />
+            <SettingsComponent />
         </div>
     </div>
 </template>

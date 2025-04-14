@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router';
-import MainForecastView from '@/views/pages/forecast/MainForecastView.vue';
-import ExploreView from '@/views/pages/explore/ExploreView.vue';
-import SavedLocationsView from '@/views/pages/saved/SavedLocationsView.vue';
+import MainForecastView from '@/pages/forecast/MainForecast.vue';
+import ExploreView from '@/pages/explore/Explore.vue';
+import SavedLocationsView from '@/pages/saved/SavedLocations.vue';
 
 const routes: RouteRecordRaw[] = [
     {
@@ -21,11 +21,12 @@ const routes: RouteRecordRaw[] = [
         },
     },
     {
-        path: '/explore',
+        path: '/explore/:id?',
         name: 'explore',
         component: ExploreView,
         meta: {
             navName: 'Explore',
+            defaultPath: '/explore',
         },
     },
 ];
