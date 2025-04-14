@@ -6,6 +6,11 @@ import {
     type SearchResults,
 } from '@/services/geocodingService.ts';
 import { useUserStore } from '@/stores/userStore/userStore.ts';
+import type { Forecast } from '../forecastStore/types';
+import {
+    getForecastFromLocation,
+    getHourlyForecastFromLocation,
+} from '@/services/forecastService';
 
 /*
     Data and functions needed to make the Explore search box work
@@ -24,6 +29,9 @@ export const useExploreSearchStore = defineStore('exploreSearchStore', () => {
      */
     const numAPICalls = ref<number>(0);
     const apiCallsDisabled = ref<boolean>(false);
+
+    const resultForecastID = ref<string>('');
+    const resultForecast = ref<Forecast>({ loading: true, hourlyLoading: true });
 
     /*
         Since the results are rendered with a `<datalist>`, we can just keep adding
@@ -56,9 +64,53 @@ export const useExploreSearchStore = defineStore('exploreSearchStore', () => {
         }
     }
 
+    /*
+        Pretty much a copy of `forecastStore.getMainForecast`.
+    */
+    async function getForecastResult(placeID: string) {
+        const selectedPlace: Place | undefined = allResults.value[placeID];
+        if (selectedPlace === undefined) {
+            console.error('selected place is undefined. this should not happen');
+            return;
+        }
+        try {
+            const { data } = await getForecastFromLocation(selectedPlace.coordinates);
+            resultForecastID.value = placeID;
+            resultForecast.value.data = data.properties;
+            resultForecast.value.gridpoints = data.gridpoints;
+        } catch {
+            // TODO: handle API error
+            console.error('Error fetching forcast from location');
+        } finally {
+            resultForecast.value.loading = false;
+        }
+
+        try {
+            const hourlyForecastResponse = await getHourlyForecastFromLocation(
+                selectedPlace.coordinates!,
+            );
+            resultForecast.value.hourlyData = hourlyForecastResponse.data.properties;
+        } catch {
+            // TODO: handle API error
+            console.error('Error fetching hourly forcast from location');
+        } finally {
+            resultForecast.value.hourlyLoading = false;
+        }
+    }
+
+    /*
+        Used to ensure previous result forecast does not appear on screen when user searches for and loads a new
+        forecast on the explore page
+    */
+    function resetStoredResultForecast() {
+        resultForecastID.value = '';
+        resultForecast.value = { loading: true, hourlyLoading: true };
+    }
+
     function $reset() {
         pastSearches.value = [];
         allResults.value = {};
+        resetStoredResultForecast();
 
         // access persistent storage here
         numAPICalls.value = 0;
@@ -69,8 +121,12 @@ export const useExploreSearchStore = defineStore('exploreSearchStore', () => {
         pastSearches,
         allResults,
         numAPICalls,
+        resultForecastID,
+        resultForecast,
         apiCallsDisabled,
         getGeocodeResults,
+        getForecastResult,
+        resetStoredResultForecast,
         $reset,
     };
 });

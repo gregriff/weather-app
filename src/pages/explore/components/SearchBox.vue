@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { useExploreSearchStore } from '@/stores/exploreSearchStore/exploreSearchStore.ts';
+import { useRouter } from 'vue-router';
+import { useTemplateRef } from 'vue';
 
+const router = useRouter();
 const exploreSearchStore = useExploreSearchStore();
 
 const searchBoxPlaceholder = 'Find City...';
-// let timeOfLastKeypress: Date | undefined = undefined;
 
 // stuff to try to avoid excessive API usage
 let timeOfLastAPICall: number | undefined = undefined;
@@ -13,6 +15,7 @@ const INITIAL_API_CALL_PAUSE_MS = 500;
 const MAX_PAUSE_MS = INITIAL_API_CALL_PAUSE_MS * 2;
 let frequencyPenaltyMultiplier = 1.0;
 
+const datalistElement = useTemplateRef<HTMLDataListElement | null>('datalistElement');
 const searchText = ref<string>('');
 
 function toggleSearchBoxPlaceholder(e: FocusEvent) {
@@ -21,17 +24,37 @@ function toggleSearchBoxPlaceholder(e: FocusEvent) {
 }
 
 /*
+    Intended to trigger the loading of the forecast of the location that the user selects from the datalist.
+    datalist <option> children are a bit tricky to work with since they cannot have onclick listeners.
+
+    This could probably be improved by checking for some more things about the event. Currently, this will run
+    every time the input box changes, so if the user types in an exact match of a datalist option, the forecast
+    will load, which is unintended.
+*/
+function triggerReroute(e: Event) {
+    if (!e.target) return;
+
+    const target = e.target as HTMLInputElement;
+    if (!target.value) return;
+
+    const selectedResult = Object.entries(exploreSearchStore.allResults).find(
+        ([, { place_name, region_code }]) =>
+            `${place_name} ${region_code}` === target.value,
+    );
+    if (!selectedResult) return;
+    const resultKey = selectedResult[0];
+
+    router.push({ name: 'explore', params: { id: resultKey } });
+}
+
+/*
     Determines when to attempt an API call for search completion
     this effectively runs onkeyup
  */
 watch(searchText, (newSearchText, oldSearchText) => {
-    console.log(newSearchText);
     const currentTime = new Date().getTime();
 
     if (newSearchText.length < oldSearchText.length) return;
-
-    // const timeOfThisKeypress = new Date().getTime();
-    // const timeSinceLastKeypress = timeOfThisKeypress - (timeOfLastKeypress ?? 0);
 
     // min chars typed to trigger API call
     if (newSearchText.length < 2) {
@@ -88,6 +111,7 @@ onMounted(() => console.log(`Mounted, apiCalls: ${exploreSearchStore.numAPICalls
             <input
                 @focus="toggleSearchBoxPlaceholder"
                 @blur="toggleSearchBoxPlaceholder"
+                @input="triggerReroute"
                 v-model="searchText"
                 class="form-control text-center"
                 list="citySearchOptions"
@@ -98,11 +122,15 @@ onMounted(() => console.log(`Mounted, apiCalls: ${exploreSearchStore.numAPICalls
                         : searchBoxPlaceholder
                 "
             />
-            <datalist id="citySearchOptions">
+            <datalist
+                id="citySearchOptions"
+                ref="datalistElement"
+            >
                 <option
-                    v-for="(place, idx) in exploreSearchStore.allResults"
-                    :key="idx"
+                    v-for="(place, key) in exploreSearchStore.allResults"
+                    :key="key"
                     :value="`${place.place_name} ${place.region_code}`"
+                    :id="key.toString()"
                 ></option>
             </datalist>
         </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HourlyForecastPeriod } from '@/stores/forecastStore/types.ts';
-import RainBadge from '@/views/pages/forecast/components/badges/RainBadge.vue';
+import RainBadge from '@/pages/forecast/components/badges/RainBadge.vue';
 import { convertISO8601ToHHMM } from '@/utils/time.ts';
 import { computed } from 'vue';
 import { getForecastIcon } from '@/utils/icons.ts';

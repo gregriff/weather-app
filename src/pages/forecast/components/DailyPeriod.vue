@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ForecastPeriod } from '@/stores/forecastStore/types.ts';
-import RainBadge from '@/views/pages/forecast/components/badges/RainBadge.vue';
+import RainBadge from '@/pages/forecast/components/badges/RainBadge.vue';
 import { computed } from 'vue';
 import { getForecastIcon } from '@/utils/icons.ts';
 
@@ -25,15 +25,15 @@ const svgHref = computed(
             <h6 class="card-subtitle mb-2 text-body-secondary">
                 {{ period.temperature }}&deg;
             </h6>
-
-            <p class="card-text">
-                {{ period.shortForecast }}
-            </p>
             <div class="row justify-content-center card-subtitle">
                 <RainBadge
                     :precipitation-probability="period.probabilityOfPrecipitation.value"
                 />
             </div>
+
+            <p class="card-text mt-3">
+                {{ period.shortForecast }}
+            </p>
         </div>
     </div>
 </template>

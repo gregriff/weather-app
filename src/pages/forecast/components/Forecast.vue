@@ -2,8 +2,8 @@
 import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
 import type { Gridpoints } from '@/stores/userStore/types.ts';
-import DailyPeriodComponent from '@/views/pages/forecast/components/DailyPeriodComponent.vue';
-import HourlyPeriodComponent from '@/views/pages/forecast/components/HourlyPeriodComponent.vue';
+import DailyPeriodComponent from '@/pages/forecast/components/DailyPeriod.vue';
+import HourlyPeriodComponent from '@/pages/forecast/components/HourlyPeriod.vue';
 
 const { forecast, hourlyForecast, gridpoints } = defineProps<{
     forecast: ForecastData;
