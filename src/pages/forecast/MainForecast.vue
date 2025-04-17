@@ -3,17 +3,45 @@ import MainLayout from '@/layout/MainLayout.vue';
 import ForecastComponent from './components/Forecast.vue';
 import { useForecastStore } from '@/stores/forecastStore/forecastStore.ts';
 import { onBeforeMount } from 'vue';
+import { ref } from 'vue';
+import { isAxiosError } from 'axios';
 
 const forecastStore = useForecastStore();
 
+const error = ref<string | undefined>(undefined);
+
+async function getMainForecast() {
+    error.value = undefined;
+    try {
+        await forecastStore.getMainForecast();
+    } catch (e) {
+        if (!isAxiosError(e)) {
+            error.value = 'Unknown Error';
+            return;
+        }
+        error.value = `${e.status}: ${e.response?.statusText}`;
+    }
+}
+
 // TODO: this condition will need to be better in the future
 onBeforeMount(() => {
-    if (!forecastStore.mainForecast.data) forecastStore.getMainForecast();
+    if (!forecastStore.mainForecast.data) getMainForecast();
 });
 </script>
 
 <template>
     <MainLayout>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div
+                    v-if="error"
+                    class="alert alert-warning my-3"
+                    role="alert"
+                >
+                    {{ error }}
+                </div>
+            </div>
+        </div>
         <div
             v-if="!forecastStore.mainForecast.data"
             class="row justify-content-center"
@@ -21,7 +49,7 @@ onBeforeMount(() => {
             <div class="col-auto">
                 <button
                     v-if="forecastStore.locationFetchFailed"
-                    @click="forecastStore.getMainForecast()"
+                    @click="getMainForecast()"
                     class="btn btn-primary"
                 >
                     Allow Location Access

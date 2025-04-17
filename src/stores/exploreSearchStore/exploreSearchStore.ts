@@ -78,9 +78,9 @@ export const useExploreSearchStore = defineStore('exploreSearchStore', () => {
             resultForecastID.value = placeID;
             resultForecast.value.data = data.properties;
             resultForecast.value.gridpoints = data.gridpoints;
-        } catch {
-            // TODO: handle API error
-            console.error('Error fetching forcast from location');
+        } catch (e) {
+            console.error('Error fetching forcast from location', e);
+            throw e;
         } finally {
             resultForecast.value.loading = false;
         }
@@ -90,9 +90,9 @@ export const useExploreSearchStore = defineStore('exploreSearchStore', () => {
                 selectedPlace.coordinates!,
             );
             resultForecast.value.hourlyData = hourlyForecastResponse.data.properties;
-        } catch {
-            // TODO: handle API error
-            console.error('Error fetching hourly forcast from location');
+        } catch (e) {
+            console.error('Error fetching hourly forcast from location', e);
+            throw e;
         } finally {
             resultForecast.value.hourlyLoading = false;
         }
