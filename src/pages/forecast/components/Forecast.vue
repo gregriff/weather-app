@@ -1,15 +1,27 @@
 <script setup lang="ts">
-import type { ForecastData, HourlyForecastData } from '@/stores/forecastStore/types.ts';
+import type {
+    HourlyForecastPeriod,
+    ForecastData,
+    ForecastPeriod,
+    HourlyForecastData,
+} from '@/stores/forecastStore/types.ts';
 import { computed } from 'vue';
 import type { Gridpoints } from '@/stores/userStore/types.ts';
 import DailyPeriodComponent from '@/pages/forecast/components/DailyPeriod.vue';
 import HourlyPeriodComponent from '@/pages/forecast/components/HourlyPeriod.vue';
+import { Modal } from 'bootstrap';
+import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
 
 const { forecast, hourlyForecast, gridpoints } = defineProps<{
     forecast: ForecastData;
     hourlyForecast?: HourlyForecastData;
     gridpoints: Gridpoints;
 }>();
+
+const modalElement = useTemplateRef<HTMLDivElement | null>('hourlyModal');
+const modalInstance = ref<Modal | null>(null);
+const selectedDay = ref<ForecastPeriod | undefined>(undefined);
+const selectedDayHourPeriods = ref<HourlyForecastPeriod[] | undefined>(undefined);
 
 const currentData = computed(() => forecast.periods[0]);
 
@@ -19,6 +31,31 @@ const sixDayPeriods = computed(() =>
 );
 
 const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
+
+// set data needed for modal to render hourly data for a selected day
+function openModal(index: number) {
+    selectedDay.value = sixDayPeriods.value[index];
+
+    // TODO: subtract by current time
+    const hourStartIndex = index === 0 ? 0 : 24 * index;
+    selectedDayHourPeriods.value = hourlyForecast?.periods.slice(
+        hourStartIndex,
+        hourStartIndex + 24,
+    );
+    modalInstance.value?.show();
+}
+
+function closeModal() {
+    selectedDay.value = undefined;
+    selectedDayHourPeriods.value = undefined;
+    modalInstance.value?.hide();
+}
+
+onMounted(() => {
+    modalInstance.value = Modal.getOrCreateInstance(modalElement.value!);
+});
+
+onUnmounted(() => modalInstance.value?.dispose());
 </script>
 
 <template>
@@ -69,10 +106,64 @@ const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
                     <div
                         v-for="(day, idx) in sixDayPeriods"
                         :key="idx"
+                        @click="openModal(idx)"
                         class="col-12 col-sm-4 mb-3"
                     >
                         <DailyPeriodComponent :period="day" />
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="modal fade"
+        id="hourlyModal"
+        ref="hourlyModal"
+        tabindex="-1"
+        aria-labelledby="hourlyModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1
+                        class="modal-title fs-5"
+                        id="hourlyModalLabel"
+                    >
+                        {{ selectedDay?.name }}
+                    </h1>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                        @click="closeModal()"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <div
+                        v-if="hourlyForecast"
+                        class="row justify-content-evenly mt-2"
+                    >
+                        <div
+                            v-for="(hour, idx) in selectedDayHourPeriods"
+                            :key="idx"
+                            class="col-6 col-sm-4 my-2"
+                        >
+                            <HourlyPeriodComponent :period="hour" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        @click="closeModal()"
+                    >
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
