@@ -47,9 +47,9 @@ export const useForecastStore = defineStore('forecastStore', () => {
             mainForecast.value.data = data.properties;
             mainForecast.value.gridpoints = userStore.currentGridpoints =
                 data.gridpoints;
-        } catch {
-            // TODO: handle API error
-            console.error('Error fetching forcast from location');
+        } catch (e) {
+            console.error('Error fetching forcast from location', e);
+            throw e;
         } finally {
             mainForecast.value.loading = false;
         }
@@ -60,9 +60,9 @@ export const useForecastStore = defineStore('forecastStore', () => {
                 userStore.currentGridpoints,
             );
             mainForecast.value.hourlyData = hourlyForecastResponse.data.properties;
-        } catch {
-            // TODO: handle API error
-            console.error('Error fetching hourly forcast from location');
+        } catch (e) {
+            console.error('Error fetching hourly forcast from location', e);
+            throw e;
         } finally {
             mainForecast.value.hourlyLoading = false;
         }
