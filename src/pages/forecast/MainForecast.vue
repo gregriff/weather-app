@@ -9,14 +9,20 @@ import { isAxiosError } from 'axios';
 const forecastStore = useForecastStore();
 
 const error = ref<string | undefined>(undefined);
+const hourlyNotAvailable = ref<boolean>(false);
 
 async function getMainForecast() {
     error.value = undefined;
+    hourlyNotAvailable.value = false;
     try {
         await forecastStore.getMainForecast();
     } catch (e) {
         if (!isAxiosError(e)) {
             error.value = 'Unknown Error';
+            return;
+        }
+        if (forecastStore.mainForecast.data && !forecastStore.mainForecast.hourlyData) {
+            hourlyNotAvailable.value = true;
             return;
         }
         error.value = `${e.status}: ${e.response?.statusText}`;
@@ -76,6 +82,7 @@ onBeforeMount(() => {
             :forecast="forecastStore.mainForecast.data"
             :hourly-forecast="forecastStore.mainForecast.hourlyData"
             :gridpoints="forecastStore.mainForecast.gridpoints!"
+            :hourly-not-available="hourlyNotAvailable"
         />
     </MainLayout>
 </template>
