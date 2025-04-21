@@ -49,6 +49,7 @@ export const useForecastStore = defineStore('forecastStore', () => {
                 data.gridpoints;
         } catch (e) {
             console.error('Error fetching forcast from location', e);
+            mainForecast.value.data = undefined;
             throw e;
         } finally {
             mainForecast.value.loading = false;
@@ -62,6 +63,7 @@ export const useForecastStore = defineStore('forecastStore', () => {
             mainForecast.value.hourlyData = hourlyForecastResponse.data.properties;
         } catch (e) {
             console.error('Error fetching hourly forcast from location', e);
+            mainForecast.value.hourlyData = undefined;
             throw e;
         } finally {
             mainForecast.value.hourlyLoading = false;

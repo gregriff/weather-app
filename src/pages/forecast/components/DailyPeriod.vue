@@ -15,25 +15,26 @@ const svgHref = computed(
 
 <template>
     <div class="card text-center">
-        <div class="card-img-top align-self-center mt-3">
-            <svg class="daily-forecast-main-icon">
-                <use :href="svgHref" />
-            </svg>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">{{ period.name }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">
-                {{ period.temperature }}&deg;
-            </h6>
-            <div class="row justify-content-center card-subtitle">
-                <RainBadge
-                    :precipitation-probability="period.probabilityOfPrecipitation.value"
-                />
+        <div class="row d-flex flex-row align-items-center mx-2 my-3">
+            <div class="col-3 col-lg-auto">
+                <svg class="daily-forecast-main-icon">
+                    <use :href="svgHref" />
+                </svg>
             </div>
-
-            <p class="card-text mt-3">
-                {{ period.shortForecast }}
-            </p>
+            <div class="col-6 col-lg-auto">
+                <h5 class="card-title m-0">{{ period.name }}</h5>
+            </div>
+            <div class="col-3 col-lg-auto">
+                <h5 class="text-body-secondary m-0">{{ period.temperature }}&deg;</h5>
+            </div>
+            <RainBadge
+                :precipitation-probability="period.probabilityOfPrecipitation.value"
+            />
+            <div class="col-12 col-lg-auto">
+                <p class="card-text">
+                    {{ period.shortForecast }}
+                </p>
+            </div>
         </div>
     </div>
 </template>

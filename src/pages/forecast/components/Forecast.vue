@@ -12,10 +12,11 @@ import HourlyPeriodComponent from '@/pages/forecast/components/HourlyPeriod.vue'
 import { Modal } from 'bootstrap';
 import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
 
-const { forecast, hourlyForecast, gridpoints } = defineProps<{
+const { forecast, hourlyForecast, gridpoints, hourlyNotAvailable } = defineProps<{
     forecast: ForecastData;
     hourlyForecast?: HourlyForecastData;
     gridpoints: Gridpoints;
+    hourlyNotAvailable: boolean;
 }>();
 
 const modalElement = useTemplateRef<HTMLDivElement | null>('hourlyModal');
@@ -25,16 +26,16 @@ const selectedDayHourPeriods = ref<HourlyForecastPeriod[] | undefined>(undefined
 
 const currentData = computed(() => forecast.periods[0]);
 
-// There are always 7 daytime periods. For better html layout, reduce to 6
-const sixDayPeriods = computed(() =>
-    forecast.periods.filter((data) => data.isDaytime).slice(0, -1),
+// There are always 7 daytime periods including today. For better html layout, reduce to 6
+const nextSixDays = computed(() =>
+    forecast.periods.filter((data) => data.isDaytime).slice(1),
 );
 
 const nextSixHours = computed(() => hourlyForecast?.periods.slice(0, 6));
 
 // set data needed for modal to render hourly data for a selected day
 function openModal(index: number) {
-    selectedDay.value = sixDayPeriods.value[index];
+    selectedDay.value = nextSixDays.value[index];
 
     // TODO: subtract by current time
     const hourStartIndex = index === 0 ? 0 : 24 * index;
@@ -69,10 +70,16 @@ onUnmounted(() => modalInstance.value?.dispose());
                         <h1 class="display-4 card-title">
                             {{ gridpoints.city }}
                         </h1>
-                        <h1 class="display-6 text-body-secondary">
+                        <h3 class="display-6 text-body-secondary m-0">
                             {{ currentData.temperature }}&deg;
                             <small>{{ currentData.temperatureUnit }}</small>
-                        </h1>
+                        </h3>
+                        <p
+                            class="lead hourly-unavailable m-0"
+                            v-if="hourlyNotAvailable"
+                        >
+                            Hourly Forecast Unavailable
+                        </p>
                     </div>
                     <h6 class="card-subtitle mb-2 text-body-secondary">
                         {{ currentData.shortForecast }}
@@ -104,10 +111,10 @@ onUnmounted(() => modalInstance.value?.dispose());
             <div class="container">
                 <div class="row justify-content-evenly">
                     <div
-                        v-for="(day, idx) in sixDayPeriods"
+                        v-for="(day, idx) in nextSixDays"
                         :key="idx"
-                        @click="openModal(idx)"
-                        class="col-12 col-sm-4 mb-3"
+                        @click="hourlyNotAvailable ? () => {} : openModal(idx)"
+                        class="col-12 mb-3"
                     >
                         <DailyPeriodComponent :period="day" />
                     </div>
@@ -173,5 +180,9 @@ onUnmounted(() => modalInstance.value?.dispose());
 <style lang="scss" scoped>
 .main-card {
     border-color: transparent;
+}
+
+.hourly-unavailable {
+    color: var(--bs-danger);
 }
 </style>

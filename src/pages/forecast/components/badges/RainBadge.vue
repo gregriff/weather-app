@@ -9,7 +9,7 @@ const { precipitationProbability } = defineProps<{
 <template>
     <div
         v-if="precipitationProbability"
-        class="col-auto"
+        class="col 12 col-lg-auto"
     >
         <span class="badge rounded-pill text-bg-info"
             ><svg class="daily-forecast-badge-icon">
