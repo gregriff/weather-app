@@ -69,7 +69,7 @@ onBeforeMount(() => {
                 </div>
                 <button
                     v-else
-                    @click="forecastStore.getMainForecast()"
+                    @click="getMainForecast()"
                     class="btn btn-danger"
                 >
                     Retry
