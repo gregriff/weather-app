@@ -12,11 +12,16 @@ import HourlyPeriodComponent from '@/pages/forecast/components/HourlyPeriod.vue'
 import { Modal } from 'bootstrap';
 import { ref, useTemplateRef, onMounted, onUnmounted } from 'vue';
 
-const { forecast, hourlyForecast, gridpoints, hourlyNotAvailable } = defineProps<{
+const {
+    forecast,
+    hourlyForecast,
+    gridpoints,
+    hourlyNotAvailable = false,
+} = defineProps<{
     forecast: ForecastData;
     hourlyForecast?: HourlyForecastData;
     gridpoints: Gridpoints;
-    hourlyNotAvailable: boolean;
+    hourlyNotAvailable?: boolean;
 }>();
 
 const modalElement = useTemplateRef<HTMLDivElement | null>('hourlyModal');

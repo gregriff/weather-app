@@ -25,7 +25,11 @@ async function getMainForecast() {
             hourlyNotAvailable.value = true;
             return;
         }
-        error.value = `${e.status}: ${e.response?.statusText}`;
+        if (e.response === undefined) {
+            error.value = 'Network Error, request failed';
+            return;
+        }
+        error.value = `${e.status}: ${e.response.statusText}`;
     }
 }
 
